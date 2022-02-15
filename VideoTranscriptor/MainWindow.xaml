@@ -29,6 +29,7 @@
 			<RowDefinition />
 			<RowDefinition />
 			<RowDefinition />
+			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="3*" />
@@ -55,9 +56,20 @@
 		<Button Grid.Row="2" 
 				Grid.Column="0" 
 				Grid.ColumnSpan="2"
+				Click="TranscriptBtn_OnClick"
 				Margin="40"
 				x:Name="TranscriptBtn"
 				Content="Transcript Videos" />
+
+		<ProgressBar 
+			Grid.Column="0" 
+			Grid.Row="3"
+		    Grid.ColumnSpan="2" 
+			VerticalAlignment="Bottom"
+			x:Name="ProgressBar"
+			Height="15"
+			Maximum="{Binding VideoPathList.Count}" Value="{Binding ProcessingItems}" />
+
 
 	</Grid>
 </Window>
