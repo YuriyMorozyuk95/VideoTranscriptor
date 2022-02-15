@@ -15,7 +15,7 @@
 		
 		<Style TargetType="TextBox">
 			<Setter Property="Margin" Value="40 5 0 5" />
-			<Setter Property="IsReadOnly" Value="True" />
+			<Setter Property="IsEnabled" Value="True" />
 			<Setter Property="TextWrapping" Value="Wrap" />
 		</Style>
 

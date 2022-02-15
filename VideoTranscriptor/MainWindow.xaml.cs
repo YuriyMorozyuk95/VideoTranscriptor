@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using VideoTranscriptor.Annotations;
+using Microsoft.Win32;
 
 namespace VideoTranscriptor
 {
-	using System.ComponentModel;
-	using System.Runtime.CompilerServices;
-	using Annotations;
-	using Microsoft.Win32;
 	using WinForms = System.Windows.Forms;
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window, INotifyPropertyChanged
+	[UsedImplicitly]
+	public partial class MainWindow : INotifyPropertyChanged
 	{
 		private string _outputFolder;
 
@@ -33,6 +34,13 @@ namespace VideoTranscriptor
 			}
 		}
 
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		[NotifyPropertyChangedInvocator]
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
 
 		private void SelectVideoBtn_Click(object sender, RoutedEventArgs e)
 		{
@@ -44,10 +52,10 @@ namespace VideoTranscriptor
 			};
 
 			if (openFileDialog.ShowDialog() != true) return;
-			
+
 			VideoPathList.Clear();
 
-			foreach(var file in openFileDialog.FileNames)
+			foreach (var file in openFileDialog.FileNames)
 			{
 				VideoPathList.Add(file);
 			}
@@ -64,14 +72,6 @@ namespace VideoTranscriptor
 					OutputFolder = fbd.SelectedPath;
 				}
 			}
-		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		[NotifyPropertyChangedInvocator]
-		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }
