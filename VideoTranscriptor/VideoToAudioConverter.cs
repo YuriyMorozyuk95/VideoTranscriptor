@@ -10,10 +10,12 @@ namespace VideoTranscriptor
 
 	internal class VideoToAudioConverter
 	{
-		public void TranslateVideoToAudio(string inputPath, string outputPath)
+		public Task ConvertVideoToAudio(string inputPath, string outputPath)
 		{
 			var ffMpeg = new FFMpegConverter();
 			ffMpeg.ConvertMedia(inputPath, outputPath, "wav");
+
+			return Task.CompletedTask;
 		}
 	}
 }

@@ -9,6 +9,7 @@ using Microsoft.Win32;
 namespace VideoTranscriptor
 {
 	using System.Linq;
+	using System.Windows.Controls;
 	using WinForms = System.Windows.Forms;
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
@@ -17,13 +18,13 @@ namespace VideoTranscriptor
 	public partial class MainWindow : INotifyPropertyChanged
 	{
 		private string _outputFolder;
-		private int _processingItems;
+		private int _itemProcessed;
 
 		public MainWindow()
 		{
 			InitializeComponent();
 
-			ProcessingItems = 0;
+			ItemProcessed = 0;
 		}
 		 
 		private void SelectVideoBtn_Click(object sender, RoutedEventArgs e)
@@ -65,16 +66,19 @@ namespace VideoTranscriptor
 				MessageBox.Show("please setup all fields");
 			}
 
-			var transcriptService = new TranscriptService();
+			var transcriptService = new TranscriptManager();
+			transcriptService.FileTranslatedEvent += TranscriptServiceFileTranslatedEvent;
+			transcriptService.LogEvent += TranscriptServiceLogEvent;
+
 			ProgressBar.Maximum = VideoPathList.Count;
-			ProcessingItems = 0;
+			ItemProcessed = 0;
 
 			try
 			{
 				await transcriptService.TranscriptVideoFiles(
 					VideoPathList.ToArray(),
-					OutputFolder,
-					() => { ProcessingItems++; });
+					OutputFolder);
+
 			}
 			catch (Exception exception)
 			{
@@ -82,13 +86,30 @@ namespace VideoTranscriptor
 			}
 			finally
 			{
-				ProgressBar.Value = VideoPathList.Count;
+				MessageBox.Show("Done!");
 			}
+		}
+
+		private void TranscriptServiceLogEvent(object sender, EventArgs e)
+		{
+			OutputLog += (string)sender + Environment.NewLine;
+		}
+
+		private void TranscriptServiceFileTranslatedEvent(object sender, EventArgs e)
+		{
+			ItemProcessed = (int)sender;
+		}
+
+		private void TextBoxBase_OnTextChanged(object sender, TextChangedEventArgs e)
+		{
+			var textBox = sender as TextBox;
+			textBox.ScrollToEnd();
 		}
 	}
 
 	public partial class MainWindow : INotifyPropertyChanged
 	{
+		private string _outputLog;
 		public ObservableCollection<string> VideoPathList { get; set; } = new ObservableCollection<string>();
 
 		public string OutputFolder
@@ -101,12 +122,22 @@ namespace VideoTranscriptor
 			}
 		}
 
-		public int ProcessingItems
+		public int ItemProcessed
 		{
-			get => _processingItems;
+			get => _itemProcessed;
 			set
 			{
-				_processingItems = value;
+				_itemProcessed = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public string OutputLog
+		{
+			get => _outputLog;
+			set
+			{
+				_outputLog = value;
 				OnPropertyChanged();
 			}
 		}
@@ -118,5 +149,7 @@ namespace VideoTranscriptor
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
+
+		
 	}
 }

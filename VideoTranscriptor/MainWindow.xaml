@@ -9,27 +9,29 @@
         Title="Video Transcriptor" Height="450" Width="800">
 	<Window.Resources>
 		<Style TargetType="ListBox">
-			<Setter Property="Margin" Value="40 5 0 5" />
-			<Setter Property="IsEnabled" Value="False" />
+			<Setter Property="Margin" Value="20 5 0 5" />
+			<Setter Property="IsEnabled" Value="True" />
 		</Style>
-		
+
 		<Style TargetType="TextBox">
-			<Setter Property="Margin" Value="40 5 0 5" />
+			<Setter Property="Margin" Value="20 5 0 5" />
 			<Setter Property="IsEnabled" Value="True" />
 			<Setter Property="TextWrapping" Value="Wrap" />
+			<Setter Property="VerticalScrollBarVisibility" Value="Auto" />
 		</Style>
 
 		<Style TargetType="Button">
-			<Setter Property="Margin" Value="0 5 40 5" />
+			<Setter Property="Margin" Value="0 5 20 5" />
 		</Style>
-		
+
 	</Window.Resources>
-    <Grid>
+	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition />
-			<RowDefinition />
-			<RowDefinition />
-			<RowDefinition Height="Auto" />
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="1*" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="1*"  />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="3*" />
@@ -54,21 +56,26 @@
 				Content="Select Output Folder" />
 
 		<Button Grid.Row="2" 
-				Grid.Column="0" 
-				Grid.ColumnSpan="2"
-				Click="TranscriptBtn_OnClick"
-				Margin="40"
-				x:Name="TranscriptBtn"
-				Content="Transcript Videos" />
+		        Grid.Column="0" 
+		        Grid.ColumnSpan="2"
+		        Click="TranscriptBtn_OnClick"
+		        Margin="20"
+		        x:Name="TranscriptBtn"
+		        Content="Transcript Videos" />
+
+		<TextBox Grid.Row="3" 
+		         Margin="20"
+		         Grid.ColumnSpan="2" 
+		         Grid.Column="0" 
+		         TextChanged="TextBoxBase_OnTextChanged"  
+		         Text="{Binding OutputLog}" />
 
 		<ProgressBar 
 			Grid.Column="0" 
-			Grid.Row="3"
+			Grid.Row="4"
 		    Grid.ColumnSpan="2" 
-			VerticalAlignment="Bottom"
 			x:Name="ProgressBar"
-			Height="15"
-			Maximum="{Binding VideoPathList.Count}" Value="{Binding ProcessingItems}" />
+			Maximum="{Binding VideoPathList.Count}" Value="{Binding ItemProcessed}" />
 
 
 	</Grid>
